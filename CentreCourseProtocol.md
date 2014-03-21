@@ -19,31 +19,31 @@ Haering Lab, Cell Biology & Biophysics, EMBL
 1. Aim: Learn how to process and analyze high content image data by Fiji scripting
 2. Introduction: Background of data
 3. Processing and analyzing using Fiji GUI
-   - We first try to segment nucleus image and do measurement using GUI, to know how the algorithm works.    
+   - We first try to segment nuclei in the images and do measurement using the Fiji GUI, to know how the algorithm works.    
 4. Python Crash Course
-   - We want to write a script that does processing and measurements: for this we first need to learn  basics of python syntax.   
+   - We want to write a script that does processing and measurements: for this we first need to learn a few basics of python syntax.   
 5. Fiji scripting in Jython
-   - Jython is a Java-implemented Python, allows to use full functionality of Fiji by scripting. We learn how to write Jython script to do our task automatically.  
-6. Submitting Jobs (executing Jython script) to the cluster.
+   - Jython is a Java-implemented Python, allows to use full functionality of Fiji by scripting. We learn how to write a Jython script to do our task automatically.  
+6. Submitting jobs (executing Jython script) to the cluster.
    - As there are many images, we use cluster to parallelize the computation, to get results in a short time. 
 
 ## Introduction
 
-Image based screening (high content screening) is one of the modern methods for screening genes involved in a biological process. The main idea is to sytematically acquire a huge amount of data with various treatments, and try to isolate treatments that affects the target biological process. 
+Image based screening (high content screening) is one of the modern methods to identify genes involved in a biological process. The main idea is to sytematically acquire a huge amount of data with various treatments, and try to isolate genes that affects the target biological process. 
 
-Dataset we use in this course is from a scretory pathway screening. Proteins synthesized in endoplasmic reticulum are transported first to the Golgi, where proteins are added with modifications, and then to the plasma membrane or other desitned intracellular structures. 
+The dataset we use in this course is from a secretory pathway screening. Proteins synthesized in the endoplasmic reticulum (ER) are transported first to the Golgi, where they are posttranslationally modified. From the ER they are then transported to the plasma membrane or other desitned intracellular structures. 
 
-VSVG is a model protein used for studying this transport system and is a heat-sensitive protein.  This protein could beaccumulated in / released from ER by temperature shifting, to experimentally analyze the process of intracellular transport from ER to the plasma membrane. 
+VSVG (vesicular stomatitis virus protein G) is a model protein used to study this transport system in human cell culture. VSVG is heat-sensitive and can be accumulated in / released from ER by temperature shifting, to experimentally analyze the process of intracellular transport from ER to the plasma membrane. 
 
-To study the transport process, it is desirable to take time lapse sequence to follow the changes in VSVG localization within cell. However, it is sufficient to assess the transport process by taking a snapshot at a defined time point after releasing the protein from ER and check where the protein is located. In control condition, proteins should be localized in the plasma membrane after successful transports. If the transport out from the ER is interferred due to suppression of the component of transport, proteins should be stably located in the ER. Likewise, finding proteins in the Golgi suggests that transport machinary from Golgi to the plasma membrane is blocked. 
+To study the transport process, it is desirable to take time lapse sequence to follow the changes in VSVG localization within cell. However, it is sufficient to assess the transport process by taking a snapshot at a defined time point after releasing the protein from ER and check where the protein is located. In a positive control condition, proteins should be localized in the plasma membrane after successful transport. If the transport from the ER is interferred due to suppression of one or more transport components, proteins should be stably located in the ER. Likewise, finding proteins in the Golgi suggests that transport machinery from Golgi to the plasma membrane is defective. 
 
 With this snapshot strategy, it is possible to systematically prepare a set of siRNAs and drug treatments to test their effect on vesicle transport system: the high content image screening. 
 
-In this course, we will try to analyze all images from different types of treatments automatically, evaluate and compare the difference in the effeciency of transport. This COULD be done manually, but we have huge number of various treatments: approximately  of images to analyze. To not to end the rest of our life clicking images, we will completely automate the image processing and  analysis to extract transport parametes and output results as a huge list of parameter table. 
+In this course, we will try to analyze all images from different types of treatments automatically, evaluate and compare the difference in the efficiency of transport. This COULD be done manually, but we have huge number of various treatments: approximately **HOW MANY??** of images to analyze. To not spend the rest of our life clicking images, we will completely automate the image processing and analysis to extract transport parameters. We will then output the results as a huge parameters table.
 
-This table then is studied using statistical techniques to distinguish treatments that are largely affecting the transport system. 
+This table then is studied using statistical techniques to distinguish treatments that are significantly affecting the secretion transport system. 
 
-Followings are the literatures published with this dataset. 
+Followings are the literature is published with this dataset. 
 
 - Liebel, U., Starkuviene, V., Erfle, H., Simpson, J.C., Poustka, A., Wiemann, S., Pepperkok, R., 2003. A microscope-based screening platform for large-scale functional protein analysis in intact cells. FEBS Lett. 554, 394–8. <http://www.ncbi.nlm.nih.gov/pubmed/17275941>
 
@@ -54,24 +54,25 @@ Ellenberg, J., Pepperkok, R., 2012. Genome-wide RNAi screening identifies human 
 
 ## Methods (Image Analysis)
 
-As we are interested in the attenuation or the enhancement of the protein transport machinary from ER to the plasma membrane via the Golgi apparatus, we compare the protein density in ER, the Golgi and the plasma membrane. For this, we use three different images. 
+As we are interested in the attenuation or the enhancement of the protein transport machinery from ER to the plasma membrane via the Golgi apparatus, we compare the protein densities in the ER, in the Golgi and on the plasma membrane. For this, we use three different images. 
 
-The minimal detaset consists of three images:
+The minimal dataset consists of three images:
 
-1. Dapi signal: nucleus image
+1. DAPI signal: nucleus staining
 2. cy3 signal: VSVG signal
 3. Immunostaining signal: VSVG signal exposed to the extracellular space. 
 
-Dapi signal is used for locating individual cells and marking them. VSVG signal tells us where the VSVG protein is located within the cell. When they are at the Golgi, they are concentrated close to the nucleus. When they are in ER and the plasma membrane, they are evenly distributed within the cell. To check the VSVG protein specifically localized to the plasma membrane, the third image from immunostaining of the VSVG protein is used: the signal only appears when the protein is exposed to the extracellular space.
+The DAPI signal is used to locate individual cells and marking them. VSVG signal tells us where the VSVG protein is located within the cell. When they are at the Golgi, they are concentrated close to the nucleus. When they are in ER and the plasma membrane, they are evenly distributed within the cell. To check the VSVG protein specifically localized to the plasma membrane, the third image from immunostaining of the VSVG protein is used: the signal only appears when the protein is exposed to the extracellular space.
 
 ###Prescreening
 
-There are bad images just because of simple failures during acquisition, such as
+There are unusable images just because of simple failures during acquisition, such as
 
 - out of focus
 - over exposure
 
-We exclude these images by prescreening images. Standard deviation of pixel intensity in each image is measured, and those with extreme values will be excluded from the analysis. For this, a black list of file names which will be used in the main analysis is created.
+We exclude these images by prescreening images. As a criterium for image quality, the standard deviation of all pixel intensities is calculated. Low standard deviation 
+Standard deviation of pixel intensity in each image is measured, and those with extreme values will be excluded from the analysis. For this, a black list of file names which will be used in the main analysis is created.
 
 We probably will not explain this part in detail, just show you how it was done.  
 
