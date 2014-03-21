@@ -292,9 +292,12 @@ We do this interactively. Below is a list of Python funtions we conver.
 print
 print with comma separated
 
-for
-if, else, break
+variables
 
+functions
+     return
+     multiple returns
+     
 list
      initialization
      range
@@ -303,11 +306,14 @@ list
      l.append()
      len
 
+for
+
      allcellA = [roiEnlarger(r) for r in nucroiA]
 
      enumerate
      extend()
 
+if, else, break
 
 String
      concatenation
@@ -334,11 +340,16 @@ sys.argv
 
 csv.reader
 
-
-functions
-     return
-     multiple returns
 ````
+
+Codes used in this interactive session is in 
+
+<https://gist.github.com/cmci/9687511>
+
+For more information, see
+
+<http://www.jython.org/docs/library/indexprogress.html><http://www.jython.org/docs/library/functions.html>
+
 
 ## Workflow: Fiji Jython Scripting
 
