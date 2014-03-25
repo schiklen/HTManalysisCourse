@@ -43,7 +43,7 @@ In this course, we will try to analyze all images from different types of treatm
 
 This table then is studied using statistical techniques to distinguish treatments that are significantly affecting the secretion transport system. 
 
-Followings are the literature is published with this dataset. 
+The dataset has been published with the following literature: 
 
 - Liebel, U., Starkuviene, V., Erfle, H., Simpson, J.C., Poustka, A., Wiemann, S., Pepperkok, R., 2003. A microscope-based screening platform for large-scale functional protein analysis in intact cells. FEBS Lett. 554, 394–8. <http://www.ncbi.nlm.nih.gov/pubmed/17275941>
 
