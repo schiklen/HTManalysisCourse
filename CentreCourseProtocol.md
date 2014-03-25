@@ -78,7 +78,7 @@ We probably will not explain this part in detail, just show you how it was done.
 
 ###Nucleus Segmentation
 
-To measure these values, we first segment each nucleus using atutomatic local intensity thresholding (Bernsen algorithm). Then the rim of the nucleus is dilated outwards to define an approximate area to define the region of **Cell Area**. Within this region, we call the dilated region (Cell Area - Nucelus Area) as the **Juxta-Nuclear** cytoplasmic region. 
+To measure these values, we first segment each nucleus using automatic local intensity thresholding (Bernsen algorithm). Then the rim of the nucleus is dilated outwards to define an approximate area to define the region of **Cell Area**. Within this region, we call the dilated region (Cell Area - Nucelus Area) as the **Juxta-Nuclear** cytoplasmic region. 
 
 (Figure required here)
 
@@ -151,7 +151,7 @@ The protocol below is described in Simpson (2007).
 
 ###Background subtraction 
 
-Background subtraction will only be done with PM and VSVG images. In the final script, the funciton name is **backgroundSubtraction**
+Background subtraction will only be done with PM and VSVG images. In the final script, the funciton name is **backgroundSubtraction**.
 
 Get minimum and mean intensity of the image.
 
@@ -368,7 +368,7 @@ A script for processing single image dataset is:
 
 <https://gist.github.com/cmci/9644827>
 
-This script segments nucleus. 
+This script segments nuclei. 
 
 ### ROI generator
 
